@@ -11,5 +11,4 @@ venv
 .Trashes
 ehthumbs.db
 Thumbs.db
-02_trivia_api/
 node_modules/
