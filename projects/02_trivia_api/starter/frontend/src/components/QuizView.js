@@ -4,6 +4,7 @@ import $ from 'jquery';
 import '../stylesheets/QuizView.css';
 
 const questionsPerPlay = 5; 
+var localURL = "http://127.0.0.1:5000";
 
 class QuizView extends Component {
   constructor(props){
@@ -22,17 +23,17 @@ class QuizView extends Component {
 
   componentDidMount(){
     $.ajax({
-      url: `/categories`, //TODO: update request URL
+      url: `${localURL}/categories`, //TO DO: update request URL
       type: "GET",
       success: (result) => {
-        this.setState({ categories: result.categories })
+        this.setState({ categories: result.categories });
         return;
       },
       error: (error) => {
-        alert('Unable to load categories. Please try your request again')
+        alert('Unable to load categories. Please try your request again');
         return;
       }
-    })
+    });
   }
 
   selectCategory = ({type, id=0}) => {
@@ -48,7 +49,7 @@ class QuizView extends Component {
     if(this.state.currentQuestion.id) { previousQuestions.push(this.state.currentQuestion.id) }
 
     $.ajax({
-      url: '/quizzes', //TODO: update request URL
+      url: `${localURL}/quizzes`, //TO DO: update request URL
       type: "POST",
       dataType: 'json',
       contentType: 'application/json',
@@ -114,11 +115,11 @@ class QuizView extends Component {
                       onClick={() => this.selectCategory({type:this.state.categories[id], id})}>
                       {this.state.categories[id]}
                     </div>
-                  )
+                  );
                 })}
               </div>
           </div>
-      )
+      );
   }
 
   renderFinalScore(){

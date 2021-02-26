@@ -4,6 +4,9 @@ import '../stylesheets/App.css';
 import Question from './Question';
 import Search from './Search';
 import $ from 'jquery';
+var localURL = "http://127.0.0.1:5000";
+var QUESTIONS_PER_PAGE = 10
+var getQuestionAll=true
 
 class QuestionView extends Component {
   constructor(){
@@ -16,14 +19,14 @@ class QuestionView extends Component {
       currentCategory: null,
     }
   }
-
   componentDidMount() {
     this.getQuestions();
   }
 
   getQuestions = () => {
+    getQuestionAll=true
     $.ajax({
-      url: `/questions?page=${this.state.page}`, //TODO: update request URL
+      url: `${localURL}/questions?page=${this.state.page}`, //TO DO: update request URL
       type: "GET",
       success: (result) => {
         this.setState({
@@ -45,22 +48,25 @@ class QuestionView extends Component {
   }
 
   createPagination(){
-    let pageNumbers = [];
-    let maxPage = Math.ceil(this.state.totalQuestions / 10)
-    for (let i = 1; i <= maxPage; i++) {
-      pageNumbers.push(
-        <span
-          key={i}
-          className={`page-num ${i === this.state.page ? 'active' : ''}`}
-          onClick={() => {this.selectPage(i)}}>{i}
-        </span>)
+    if(getQuestionAll){
+      let pageNumbers = [];
+      let maxPage = Math.ceil(this.state.totalQuestions / QUESTIONS_PER_PAGE)
+      for (let i = 1; i <= maxPage; i++) {
+        pageNumbers.push(
+          <span
+            key={i}
+            className={`page-num ${i === this.state.page ? 'active' : ''}`}
+            onClick={() => {this.selectPage(i)}}>{i}
+          </span>)
+      }
+      return pageNumbers;
     }
-    return pageNumbers;
   }
 
   getByCategory= (id) => {
+    getQuestionAll=false
     $.ajax({
-      url: `/categories/${id}/questions`, //TODO: update request URL
+      url: `${localURL}/categories/${id}/questions`, //TO DO: update request URL
       type: "GET",
       success: (result) => {
         this.setState({
@@ -78,11 +84,11 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `/questions`, //TODO: update request URL
+      url: `${localURL}/questions/search`, //TO DO: update request URL
       type: "POST",
       dataType: 'json',
       contentType: 'application/json',
-      data: JSON.stringify({searchTerm: searchTerm}),
+      data: JSON.stringify({search: searchTerm}),
       xhrFields: {
         withCredentials: true
       },
@@ -91,7 +97,8 @@ class QuestionView extends Component {
         this.setState({
           questions: result.questions,
           totalQuestions: result.total_questions,
-          currentCategory: result.current_category })
+          currentCategory: result.current_category 
+        })
         return;
       },
       error: (error) => {
@@ -105,7 +112,7 @@ class QuestionView extends Component {
     if(action === 'DELETE') {
       if(window.confirm('are you sure you want to delete the question?')) {
         $.ajax({
-          url: `/questions/${id}`, //TODO: update request URL
+          url: `${localURL}/questions/${id}`, //TO DO: update request URL
           type: "DELETE",
           success: (result) => {
             this.getQuestions();

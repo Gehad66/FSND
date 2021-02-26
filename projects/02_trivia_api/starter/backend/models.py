@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import Column, String, Integer, create_engine
+from sqlalchemy import Sequence, Column, String, Integer, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
 
@@ -25,14 +25,22 @@ Question
 '''
 class Question(db.Model):  
   __tablename__ = 'questions'
+  # question_seq = Sequence('questions_id_seq', start=1, increment=1)
+  # print('seq ')
 
+  # print('seq ',question_seq.next_value())
+  # id = Column(Integer, question_seq, primary_key=True, server_default = question_seq.next_value())
   id = Column(Integer, primary_key=True)
   question = Column(String)
   answer = Column(String)
-  category = Column(String)
+  category = Column(Integer)
+  # category = Column(String)
+
   difficulty = Column(Integer)
 
-  def __init__(self, question, answer, category, difficulty):
+  def __init__(self, id,question, answer, category, difficulty):
+    # self.id = Sequence('questions_id_seq').next_value()
+    self.id=id
     self.question = question
     self.answer = answer
     self.category = category
