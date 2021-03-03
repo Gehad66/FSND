@@ -191,7 +191,13 @@ def create_app(test_config=None):
     try:
       if search:
         print("search")
-        selection = Question.query.filter(Question.question.ilike(f'%{search}%')).all()
+
+        searchKeyword='%'+search+'%'
+        print("searchKey ", searchKeyword)
+
+        selection = Question.query.filter(Question.question.ilike(searchKeyword)).all()
+        print(selection)
+
         current_questions = paginate_questions(request, selection)
         return jsonify({
           'success': True,
