@@ -90,23 +90,178 @@ GET '/categories'
 '5' : "Entertainment",
 '6' : "Sports"}
 
-GET '/questions'
-- Fetches all questions
+GET '/questions' or 'questions?page=number'
+- Fetches all questions paginated with 10 questions per response
+- Request Arguments: None
+- Returns: An object that has 2 objects, categories & questions. The response is paginated with 10 questions per response. The categories object has key:value pairs of id & category_string. The questions object has an array of objects. Each object in that array has key:value pairs of Id and Id_Number, answer and answer_String, category & category_Number, difficulty & difficulty_Number.
+
+{
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "questions": [
+    {
+      "answer": "Muhammad Ali", 
+      "category": 4, 
+      "difficulty": 1, 
+      "id": 9, 
+      "question": "What boxer's original name is Cassius Clay?"
+    }, 
+    {
+      "answer": "Brazil", 
+      "category": 6, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 17
+}
+
 
 POST '/questions'
 - Adds a question to DB
+- Request Arguments: requires 4 arguments; question:String, answer:String,difficulty:String, category:String
+{"question": "testQ3", "answer": "testA3", "difficulty": "3", "category": "3"}
+- Returns: An object keys created,questions,success &total_questions. The key created has value containing the id of the created question. The key questions has value containing of an array of object containging all wuestions available paginated by 10. The key success has value containing of success state of request. Finally, The key total_questions has value containing size of questions available as a whole in DB.
+
+{
+  "created": 28, 
+  "questions": [
+    {
+      "answer": "Muhammad Ali", 
+      "category": 4, 
+      "difficulty": 1, 
+      "id": 9, 
+      "question": "What boxer's original name is Cassius Clay?"
+    }, 
+    {
+      "answer": "Jackson Pollock", 
+      "category": 2, 
+      "difficulty": 2, 
+      "id": 19, 
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 18
+}
+
 
 POST '/questions/search'
 - Search questions using the provided keyword
+- Request Arguments: requires 1 arguments; a json object with key search:String & value searchKeyword:String
+{"search": "bo"}
+- Returns: An object containing keys current_category, questions, success & total_questions. The key current_category always has value null. The key questions has value of an array of object containing the found questions matching the search keyword (if any). The key success has value containing of success state of request. The key total_questions has value of number of questions returned in the response
+
+{
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Muhammad Ali", 
+      "category": 4, 
+      "difficulty": 1, 
+      "id": 9, 
+      "question": "What boxer's original name is Cassius Clay?"
+    }, 
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 2
+}
+
 
 POST '/categories/<int:id>/questions'
-- Fetches question of specified categories 
+- Fetches question of specified categories given the categories id in the reqquest path
+- Request Arguments: None
+- Returns: An object containing keys current_category, questions, success & total_questions. The key current_category has category that we sent its Id in the request (<int:id>/). The key questions has value of an array of object containing the found questions that belong to the precified category (if any). The key success has value containing of success state of request. The key total_questions has value of number of questions returned in the response
+
+{
+    "current_category": "Art",
+    "questions": [
+        {
+            "answer": "One",
+            "category": 2,
+            "difficulty": 4,
+            "id": 18,
+            "question": "How many paintings did Van Gogh sell in his lifetime?"
+        },
+        {
+            "answer": "testA3",
+            "category": 2,
+            "difficulty": 1,
+            "id": 26,
+            "question": "testQ2"
+        }
+    ],
+    "success": true,
+    "total_questions": 2
+}
+
 
 POST '/quizzes'
 - Provides a new random question that is not includded in the list of previous_question provided
+- Request Arguments: takes a json object with 2 pairs of key value. The first key is previous_questions that has an array containing the Ids of all previous questions played. The second key quiz_category has an object containg 2 pairs of key value; key type has the category of questions, key id has the id of category.
+{"previous_questions": [21,3], "quiz_category": {"type": "Science", "id": "1"}}
+
+- Returns: An object containing with 2 pairs of key values. It has 2 keys; question, success. The key question has value of an object containing the next random questions to be displayed. The key success has value containing of success state of request. 
+{
+  "question": {
+    "answer": "Blood", 
+    "category": 1, 
+    "difficulty": 4, 
+    "id": 22, 
+    "question": "Hematology is a branch of medicine involving the study of what?"
+  }, 
+  "success": true
+}
+
+
 
 DELETE '/questions/<int:question_id>'
 - Delete question with the provided ID
+
+
+{
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "questions": [
+    {
+      "answer": "Muhammad Ali", 
+      "category": 4, 
+      "difficulty": 1, 
+      "id": 9, 
+      "question": "What boxer's original name is Cassius Clay?"
+    }, 
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 17
+}
 
 
 ```

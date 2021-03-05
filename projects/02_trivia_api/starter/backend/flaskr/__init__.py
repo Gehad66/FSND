@@ -27,15 +27,13 @@ def create_app(test_config=None):
   setup_db(app)
   
   '''
-  @TO DO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
-  Done 
+  Set up CORS. 
   '''
   CORS(app,resources={'/*': {'origins': '*'}})
   # CORS(app)
 
   '''
-  @TO DO: Use the after_request decorator to set Access-Control-Allow
-  Done
+  set Access-Control-Allow
   '''
   @app.after_request
   def after_request(response):
@@ -65,16 +63,10 @@ def create_app(test_config=None):
     })
 
   '''
-  @TODO: 
-  Create an endpoint to handle GET requests for questions, 
+  GET requests for questions, 
   including pagination (every 10 questions). 
   This endpoint should return a list of questions, 
   number of total questions, current category, categories. 
-
-  TEST: At this point, when you start the application
-  you should see questions and categories generated,
-  ten questions per page and pagination at the bottom of the screen for three pages.
-  Clicking on the page numbers should update the questions. 
   '''
   # TO DO get categories in ques & test
 
@@ -125,7 +117,8 @@ def create_app(test_config=None):
         'total_questions': len(Question.query.all())
       })
 
-    except:
+    except Exception as e:  
+      print(e)
       abort(422)
 
   '''
@@ -166,19 +159,13 @@ def create_app(test_config=None):
         'questions': current_questions,
         'total_questions': len(Question.query.all())
       })
-    except:
+    except Exception as e:
+      print(e)
       print(sys.exc_info())
-
       abort(422)
 
   '''
-  @TODO: 
-  Create a POST endpoint to get questions based on a search term. 
-  It should return any questions for whom the search term 
-  is a substring of the question. 
-  TEST: Search by any phrase. The questions list will update to include 
-  only question that include that string within their question. 
-  Try using the word "title" to start. 
+  POST endpoint to get questions based on a search term. 
   '''
 
   @app.route('/questions/search', methods=['POST'])
@@ -205,7 +192,8 @@ def create_app(test_config=None):
           "current_category": None,
           'total_questions': len(selection)
         }) 
-    except:
+    except Exception as e:  
+      print(e)
       abort(500)
     
 
